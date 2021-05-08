@@ -1,6 +1,7 @@
 
 
 
+const User = require('../models/user');
 
 
 type signUp= {
@@ -8,8 +9,11 @@ type signUp= {
     password?:String
   }
 
-export const createUser=(_:any, {email,password}:signUp )=>{
-    console.log('email,password: ', email,password);
-    return null
-  
+export const createUser=async(_:any, payload:signUp )=>{
+
+  const newUser=new User(payload)
+  const data = await newUser.generateTokenId();
+  await data.user.save();
+  return data
+
   }

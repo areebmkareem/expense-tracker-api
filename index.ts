@@ -65,16 +65,43 @@ const resolvers = {
     signUpWithEmailAndPassword:createUser,
     signInWithEmailAndPassword,
     createAccountGroup:(_:any,payload:any,asd:any)=>{
-console.log(asd);
+      throw new Error("Here kopp")
     }
   }  
 };
 
+ 
 
+type contextArguments={
+  req:{
+    headers:{
+      authorization?:string
+    }
+  }
 
+ 
+}
 const server = new ApolloServer({ typeDefs, resolvers, 
-   context: async ({ req }:{req:Object}) => {
+   context: async ({ req }:contextArguments) => {   
+   const hasToken=req.headers.authorization
+   console.log('hasToken: ', hasToken);
 
+
+    // const token = req.header('token');
+    // if (token) {
+    //   let decoded = jwt.verify(token, process.env.JWT_SECRET);
+    //   if (decoded) {
+    //     let user = await User.findOne({
+    //       _id: decoded._id,
+    //       'tokens.token': token,
+    //     });
+    //     if (user) {
+    //       req.user = user;
+    //       req.token = token;
+    //       next();
+    //     } else throw 'User not found';
+    //   } else throw 'token expired';
+    // } else throw 'Unauthorized access';
   // simple auth check on every request
   // const auth = req.headers && req.headers.authorization || '';
   // const email = Buffer.from(auth, 'base64').toString('ascii');

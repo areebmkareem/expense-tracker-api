@@ -1,6 +1,6 @@
+require('./src/db/mongoose');
 const { ApolloServer, gql } = require('apollo-server');
-import {signUpWithEmailAndPassword} from "./src/routes/user"
-
+import {createUser} from "./src/routes/user"
 const typeDefs = gql`
 
   type Book {
@@ -55,7 +55,7 @@ const resolvers = {
    
   },
   Mutation: {
-    signUpWithEmailAndPassword,
+    signUpWithEmailAndPassword:createUser,
     signInWithEmailAndPassword
   }  
 };

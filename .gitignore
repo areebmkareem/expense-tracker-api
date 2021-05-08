@@ -1,2 +1,7 @@
 node_modules
-*.js
+doc
+config
+build
+npm-debug.log
+.env
+.DS_Store

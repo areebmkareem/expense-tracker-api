@@ -1,18 +1,68 @@
-import express, { Request, Response, NextFunction } from 'express';
-import { json } from 'body-parser';
+const { ApolloServer, gql } = require('apollo-server');
 
-import todoRoutes from './src/routes/todos';
 
-const app = express();
+const typeDefs = gql`
 
-app.use(json());
+  type Book {
+    title: String
+    author: String
+  }
 
-app.use('/todos', todoRoutes);
+  type Query {
+    books: [Book]
+  }
+  type Mutation{
+    signUpWithEmailAndPassword(email:String!,password:String!):Book
+    signInWithEmailAndPassword(email:String!,password:String!):Book
+  }
+   
+`;
 
-app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-  res.status(500).json({ message: err.message });
-});
+const books = [
+  {
+    title: 'The Awakening',
+    author: 'Kate Chopin',
+  },
+  {
+    title: 'City of Glass',
+    author: 'Paul Auster',
+  },
+];
 
-app.listen(3000,()=>{
-  console.log("Server Up");
+
+type signUp= {
+  email?:String,
+  password?:String
+}
+
+const signUpWithEmailAndPassword=(_:any, {email,password}:signUp )=>{
+  console.log('email,password: ', email,password);
+  return books[0]
+
+}
+const signInWithEmailAndPassword=(_:any, {email,password}:signUp )=>{
+  console.log('email,password: ', email,password);
+  return books[0]
+
+}
+
+const resolvers = {
+  Query: {
+    books: () => books,
+   
+  },
+  Mutation: {
+    signUpWithEmailAndPassword,
+    signInWithEmailAndPassword
+  }  
+};
+
+
+// The ApolloServer constructor requires two parameters: your schema
+// definition and your set of resolvers.
+const server = new ApolloServer({ typeDefs, resolvers });
+
+// The `listen` method launches a web server.
+server.listen().then(({ url }:{url:number}) => {
+  console.log(`🚀  Server ready at ${url}`);
 });

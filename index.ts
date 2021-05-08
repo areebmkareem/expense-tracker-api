@@ -1,5 +1,5 @@
 const { ApolloServer, gql } = require('apollo-server');
-
+import {signUpWithEmailAndPassword} from "./src/routes/user"
 
 const typeDefs = gql`
 
@@ -7,12 +7,19 @@ const typeDefs = gql`
     title: String
     author: String
   }
+  type user{
+    email:String!
+  }
+  type userLoginResponse{
+    token:String!
+    user:user!
+  }
 
   type Query {
     books: [Book]
   }
   type Mutation{
-    signUpWithEmailAndPassword(email:String!,password:String!):Book
+    signUpWithEmailAndPassword(email:String!,password:String!):userLoginResponse!
     signInWithEmailAndPassword(email:String!,password:String!):Book
   }
    
@@ -35,11 +42,7 @@ type signUp= {
   password?:String
 }
 
-const signUpWithEmailAndPassword=(_:any, {email,password}:signUp )=>{
-  console.log('email,password: ', email,password);
-  return books[0]
 
-}
 const signInWithEmailAndPassword=(_:any, {email,password}:signUp )=>{
   console.log('email,password: ', email,password);
   return books[0]
@@ -58,11 +61,9 @@ const resolvers = {
 };
 
 
-// The ApolloServer constructor requires two parameters: your schema
-// definition and your set of resolvers.
+
 const server = new ApolloServer({ typeDefs, resolvers });
 
-// The `listen` method launches a web server.
 server.listen().then(({ url }:{url:number}) => {
   console.log(`🚀  Server ready at ${url}`);
 });
